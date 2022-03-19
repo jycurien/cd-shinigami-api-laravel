@@ -17,10 +17,13 @@ return new class extends Migration
             $table->id();
             $table->enum('type', ['numeric', 'material']);
             $table->integer('center_code');
-            $table->integer('card_code')->unique();
+            $table->integer('card_code');
             $table->integer('check_sum');
             $table->dateTime('activated_at')->nullable();
+            $table->unique(['center_code', 'card_code']);
         });
+
+
     }
 
     /**

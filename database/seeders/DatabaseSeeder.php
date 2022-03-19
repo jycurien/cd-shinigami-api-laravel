@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Card;
 use App\Services\CheckSumCalculator;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,5 +22,13 @@ class DatabaseSeeder extends Seeder
                 'check_sum' => $checkSumCalculator->calculateCheckSum(124, 100000 + $i)
             ]);
         }
+
+        // create one activated card
+        $card = Card::factory()->create([
+            'center_code' => 126,
+            'card_code' => 100100,
+            'check_sum' => $checkSumCalculator->calculateCheckSum(124, 100000 + $i),
+            'activated_at' => new \DateTime()
+        ]);
     }
 }
