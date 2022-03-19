@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('center_code');
             $table->integer('card_code')->unique();
             $table->integer('check_sum');
-            $table->dateTime('activated_at');
+            $table->dateTime('activated_at')->nullable();
         });
     }
 
