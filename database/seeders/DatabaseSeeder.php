@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Card;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        for ($i = 0; $i < 100; $i++) {
+            Card::factory()->create([
+                'card_code' => 100000 + $i
+            ]);
+        }
     }
 }

@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->enum('type', ['numeric', 'material']);
             $table->integer('center_code');
-            $table->integer('card_code');
-            $table->dateTime('activated_at');
+            $table->integer('card_code')->unique();
             $table->integer('check_sum');
+            $table->dateTime('activated_at');
         });
     }
 

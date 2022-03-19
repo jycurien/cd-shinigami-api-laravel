@@ -17,7 +17,11 @@ class CardFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'type' => 'material',
+            'center_code' => 124,
+            'card_code' => $this->faker->unique()->numberBetween(100000, 200000),
+            'check_sum' => $this->faker->numberBetween(0, 9), // TODO replace with checksum calculation
+            'activated_at' => new \DateTime(),
         ];
     }
 }
