@@ -14,7 +14,7 @@ class CardController extends Controller
 {
     const LIMIT_CARDS_TO_DISPLAY = 20;
 
-    public function findByCode(string $code)
+    public function show(string $code)
     {
         if (10 !== strlen($code)) {
             throw new InvalidArgumentException('Invalid card number');
