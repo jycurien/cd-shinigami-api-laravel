@@ -25,4 +25,17 @@ class CardOrderController extends Controller
 
         return new JsonResponse($order, Response::HTTP_OK);
     }
+
+    public function update(Request $request, CardOrder $order)
+    {
+        $parameters = json_decode($request->getContent());
+
+        if (null === $parameters->received) {
+            return new JsonResponse(['errorMessage' => 'You must provide a received state'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $order->received = true;
+        $order->save();
+        return new JsonResponse($order, Response::HTTP_OK);
+    }
 }
