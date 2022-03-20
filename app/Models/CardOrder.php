@@ -13,6 +13,7 @@ class CardOrder extends Model
     use HasFactory;
 
     public $timestamps = false;
+    protected $guarded = [];
 
     /**
      * @return HasMany

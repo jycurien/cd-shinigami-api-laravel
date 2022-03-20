@@ -26,3 +26,4 @@ Route::post('/cards', [CardController::class, 'create']);
 Route::put('/cards/{code}', [CardController::class, 'update']);
 
 Route::get('/orders', [CardOrderController::class, 'index']);
+Route::post('/orders', [CardOrderController::class, 'create']);

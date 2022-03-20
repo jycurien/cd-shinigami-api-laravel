@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Card;
+use App\Models\CardOrder;
 
 class CardHandler
 {
@@ -39,13 +40,24 @@ class CardHandler
         return $card;
     }
 
-    private function createNumericCard(int $centerCode, int $cardCode): Card
+    public function createNumericCard(int $centerCode, int $cardCode): Card
     {
         return Card::create([
             'center_code' => $centerCode,
             'card_code' => $cardCode,
             'type' => 'numeric',
             'check_sum' => $this->checkSumCalculator->calculateCheckSum($centerCode, $cardCode),
+        ]);
+    }
+
+    public function createMaterialCard(int $centerCode, int $cardCode, CardOrder $order): Card
+    {
+        return Card::create([
+            'center_code' => $centerCode,
+            'card_code' => $cardCode,
+            'type' => 'material',
+            'check_sum' => $this->checkSumCalculator->calculateCheckSum($centerCode, $cardCode),
+            'card_order_id' => $order->id
         ]);
     }
 }

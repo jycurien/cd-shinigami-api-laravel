@@ -49,6 +49,13 @@ class Card extends Model
             ->firstOrFail();
     }
 
+    public static function findMaxCardCode(int $centerCode, string $type)
+    {
+        return self::where('center_code', $centerCode)
+            ->where('type', $type)
+            ->max('card_code');
+    }
+
     /**
      * @param string $code
      * @return array
