@@ -14,15 +14,12 @@ class CardController extends Controller
 {
     const LIMIT_CARDS_TO_DISPLAY = 20;
 
-    public function findByCode($code) {
+    public function findByCode(string $code)
+    {
         if (10 !== strlen($code)) {
             throw new InvalidArgumentException('Invalid card number');
         }
-        [$centerCode, $cardCode, $checkSum] = $this->extractCodeParts($code);
-        return Card::where('center_code', $centerCode)
-                ->where('card_code', $cardCode)
-                ->where('check_sum', $checkSum)
-                ->firstOrFail();
+        return Card::findByFullCode($code);
     }
 
     public function index()
@@ -30,7 +27,7 @@ class CardController extends Controller
         return Card::orderBy('id', 'DESC')->take(self::LIMIT_CARDS_TO_DISPLAY)->get();
     }
 
-    public function create(Request $request, CardHandler $cardHandler)
+    public function create(Request $request, CardHandler $cardHandler): JsonResponse
     {
         $parameters = json_decode($request->getContent());
         if (!isset($parameters->center)) {
@@ -41,12 +38,9 @@ class CardController extends Controller
         return new JsonResponse($card, Response::HTTP_OK);
     }
 
-    /**
-     * @param $code
-     * @return array
-     */
-    private function extractCodeParts($code): array
+    public function update(string $code, CardHandler $cardHandler)
     {
-        return [substr($code, 0, 3), substr($code, 3, 6), substr($code, 9)];
+        $card = $cardHandler->update($code);
+        return new JsonResponse($card, Response::HTTP_OK);
     }
 }

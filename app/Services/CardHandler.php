@@ -22,6 +22,23 @@ class CardHandler
         return $this->createNumericCard($centerCode, $newCardCode);
     }
 
+    public function update($code): ?Card
+    {
+        /** @var Card $card */
+        $card = Card::findByFullCode($code);
+
+        // We check if the card exists and if the activation date is not already set
+        if($card && null === $card->activated_at) {
+            $card->activated_at = new \DateTime();
+            $card->save();
+        } else {
+            // We set the card to null if it doesn't exists OR if activationDate is already set
+            $card = null;
+        }
+
+        return $card;
+    }
+
     private function createNumericCard(int $centerCode, int $cardCode): Card
     {
         return Card::create([

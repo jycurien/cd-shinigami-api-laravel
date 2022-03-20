@@ -39,4 +39,22 @@ class Card extends Model
             ->where('type', $type)
             ->max('card_code');
     }
+
+    public static function findByFullCode(string $fullCode)
+    {
+        [$centerCode, $cardCode, $checkSum] = self::extractCodeParts($fullCode);
+        return self::where('center_code', $centerCode)
+            ->where('card_code', $cardCode)
+            ->where('check_sum', $checkSum)
+            ->firstOrFail();
+    }
+
+    /**
+     * @param string $code
+     * @return array
+     */
+    private static function extractCodeParts(string $code): array
+    {
+        return [substr($code, 0, 3), substr($code, 3, 6), substr($code, 9)];
+    }
 }
