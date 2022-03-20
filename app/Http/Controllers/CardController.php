@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use App\Services\CardHandler;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
+use Symfony\Component\HttpFoundation\Response;
 
 class CardController extends Controller
 {
@@ -25,6 +28,17 @@ class CardController extends Controller
     public function index()
     {
         return Card::orderBy('id', 'DESC')->take(self::LIMIT_CARDS_TO_DISPLAY)->get();
+    }
+
+    public function create(Request $request, CardHandler $cardHandler)
+    {
+        $parameters = json_decode($request->getContent());
+        if (!isset($parameters->center)) {
+            return new JsonResponse(['errorMessage' => 'You must provide a center code'], Response::HTTP_BAD_REQUEST);
+        }
+        // TODO validate center code
+        $card = $cardHandler->create($parameters->center);
+        return new JsonResponse($card, Response::HTTP_OK);
     }
 
     /**

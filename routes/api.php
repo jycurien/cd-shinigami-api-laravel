@@ -21,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/cards/code-{code}', [CardController::class, 'findByCode'])->where('code', '\d+');;
 Route::get('/cards', [CardController::class, 'index']);
+Route::post('/cards', [CardController::class, 'create']);
