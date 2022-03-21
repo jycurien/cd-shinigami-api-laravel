@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\DB;
 
 class Card extends Model
 {
@@ -31,37 +30,5 @@ class Card extends Model
     public function cardOrder(): BelongsTo
     {
         return $this->belongsTo(CardOrder::class);
-    }
-
-    public static function findMaxCardCodeByCenterAndType(int $centerCode, string $type): ?int
-    {
-        return self::where('center_code', $centerCode)
-            ->where('type', $type)
-            ->max('card_code');
-    }
-
-    public static function findByFullCode(string $fullCode)
-    {
-        [$centerCode, $cardCode, $checkSum] = self::extractCodeParts($fullCode);
-        return self::where('center_code', $centerCode)
-            ->where('card_code', $cardCode)
-            ->where('check_sum', $checkSum)
-            ->firstOrFail();
-    }
-
-    public static function findMaxCardCode(int $centerCode, string $type)
-    {
-        return self::where('center_code', $centerCode)
-            ->where('type', $type)
-            ->max('card_code');
-    }
-
-    /**
-     * @param string $code
-     * @return array
-     */
-    private static function extractCodeParts(string $code): array
-    {
-        return [substr($code, 0, 3), substr($code, 3, 6), substr($code, 9)];
     }
 }

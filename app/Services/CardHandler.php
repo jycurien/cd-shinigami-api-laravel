@@ -4,19 +4,20 @@ namespace App\Services;
 
 use App\Models\Card;
 use App\Models\CardOrder;
+use App\Repositories\CardRepository;
 
 class CardHandler
 {
     const MIN_NUMERIC_CARD_CODE = 500000;
 
-    public function __construct(private CheckSumCalculator $checkSumCalculator)
+    public function __construct(private CheckSumCalculator $checkSumCalculator, private CardRepository $cardRepository)
     {
     }
 
     public function create(string $centerCode): Card
     {
         // We check the max number card for the given center
-        $maxCardCode = Card::findMaxCardCodeByCenterAndType($centerCode, 'numeric');
+        $maxCardCode = $this->cardRepository->findMaxCardCodeByCenterAndType($centerCode, 'numeric');
 
         $newCardCode = $maxCardCode ? $maxCardCode + 1 : self::MIN_NUMERIC_CARD_CODE;
 
@@ -26,7 +27,7 @@ class CardHandler
     public function update($code): ?Card
     {
         /** @var Card $card */
-        $card = Card::findByFullCode($code);
+        $card = $this->cardRepository->findByFullCode($code);
 
         // We check if the card exists and if the activation date is not already set
         if($card && null === $card->activated_at) {
@@ -42,7 +43,7 @@ class CardHandler
 
     public function createNumericCard(int $centerCode, int $cardCode): Card
     {
-        return Card::create([
+        return $this->cardRepository->create([
             'center_code' => $centerCode,
             'card_code' => $cardCode,
             'type' => 'numeric',
@@ -52,7 +53,7 @@ class CardHandler
 
     public function createMaterialCard(int $centerCode, int $cardCode, CardOrder $order): Card
     {
-        return Card::create([
+        return $this->cardRepository->create([
             'center_code' => $centerCode,
             'card_code' => $cardCode,
             'type' => 'material',
