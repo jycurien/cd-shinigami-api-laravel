@@ -20,11 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/cards/code-{code}', [CardController::class, 'show'])->where('code', '\d+');
+Route::get('/cards/code-{code}', [CardController::class, 'show'])->whereNumber('code');
 Route::get('/cards', [CardController::class, 'index']);
 Route::post('/cards', [CardController::class, 'create']);
-Route::put('/cards/{code}', [CardController::class, 'update']);
+Route::put('/cards/{code}', [CardController::class, 'update'])->whereNumber('code');
 
 Route::get('/orders', [CardOrderController::class, 'index']);
 Route::post('/orders', [CardOrderController::class, 'create']);
-Route::put('/orders/{order}', [CardOrderController::class, 'update']);
+Route::put('/orders/{order}', [CardOrderController::class, 'update'])->whereNumber('order');
