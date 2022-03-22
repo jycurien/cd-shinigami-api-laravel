@@ -20,11 +20,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/cards/code-{code}', [CardController::class, 'show'])->whereNumber('code');
-Route::get('/cards', [CardController::class, 'index']);
-Route::post('/cards', [CardController::class, 'create']);
-Route::put('/cards/{code}', [CardController::class, 'update'])->whereNumber('code');
 
-Route::get('/orders', [CardOrderController::class, 'index']);
-Route::post('/orders', [CardOrderController::class, 'create']);
-Route::put('/orders/{order}', [CardOrderController::class, 'update'])->whereNumber('order');
+Route::controller(CardController::class)->group(function () {
+    Route::get('/cards/code-{code}', 'show')->whereNumber('code');
+    Route::get('/cards', 'index');
+    Route::post('/cards', 'create');
+    Route::put('/cards/{code}', 'update')->whereNumber('code');
+});
+
+Route::controller(CardOrderController::class)->group(function () {
+    Route::get('/orders', 'index');
+    Route::post('/orders', 'create');
+    Route::put('/orders/{order}', 'update')->whereNumber('order');
+});
+
