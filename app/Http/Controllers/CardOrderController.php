@@ -15,27 +15,24 @@ class CardOrderController extends Controller
     {
     }
 
-    public function index()
+    public function index(): JsonResponse
     {
-        return $this->cardOrderRepository->findAllWithCenterAndCardNumbers();
+        return response()->json($this->cardOrderRepository->findAllWithCenterAndCardNumbers());
     }
 
     public function create(Request $request, CardOrderHandler $cardOrderHandler): JsonResponse
     {
-        $parameters = json_decode($request->getContent());
-        if (!isset($parameters->center) || !isset($parameters->quantity)) {
+        if (null === $request->input('center') || null === $request->input('quantity')) {
             return response()->json(['errorMessage' => 'You must provide a center code and a quantity'], Response::HTTP_BAD_REQUEST);
         }
-        $order = $cardOrderHandler->create($parameters->center, $parameters->quantity);
+        $order = $cardOrderHandler->create($request->input('center'), $request->input('quantity'));
 
-        return response()->json($order, Response::HTTP_OK);
+        return response()->json($order, Response::HTTP_CREATED);
     }
 
     public function update(Request $request, CardOrder $order): JsonResponse
     {
-        $parameters = json_decode($request->getContent());
-
-        if (null === $parameters->received) {
+        if (null === $request->input('received')) {
             return response()->json(['errorMessage' => 'You must provide a received state'], Response::HTTP_BAD_REQUEST);
         }
 

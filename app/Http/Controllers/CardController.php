@@ -15,28 +15,28 @@ class CardController extends Controller
     {
     }
 
-    public function show(string $code)
+    public function show(string $code): JsonResponse
     {
         if (10 !== strlen($code)) {
             throw new InvalidArgumentException('Invalid card number');
         }
-        return $this->cardRepository->findByFullCode($code);
+
+        return response()->json($this->cardRepository->findByFullCode($code));
     }
 
-    public function index()
+    public function index(): JsonResponse
     {
-        return $this->cardRepository->findLatest();
+        return response()->json($this->cardRepository->findLatest());
     }
 
     public function create(Request $request, CardHandler $cardHandler): JsonResponse
     {
-        $parameters = json_decode($request->getContent());
-        if (!isset($parameters->center)) {
+        if (null === $request->input('center')) {
             return  response()->json(['errorMessage' => 'You must provide a center code'], Response::HTTP_BAD_REQUEST);
         }
         // TODO validate center code
-        $card = $cardHandler->create($parameters->center);
-        return response()->json($card, Response::HTTP_OK);
+        $card = $cardHandler->create($request->input('center'));
+        return response()->json($card, Response::HTTP_CREATED);
     }
 
     public function update(string $code, CardHandler $cardHandler)
